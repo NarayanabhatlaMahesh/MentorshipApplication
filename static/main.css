@@ -1,0 +1,20 @@
+.hero-heading{
+    font-family: 'League Spartan', sans-serif;
+    color: white;
+}
+
+nav.navbar-expand-lg{
+    background-color: #3c4142 !important;
+}
+nav div a{
+    color: white !important;
+}
+
+body{
+    --_mesh-gradient-blur: 0px;
+--_mesh-gradient-blend-mode: normal;
+
+background: radial-gradient(at 38% 19%, #c26565 0px, transparent 50%), radial-gradient(at 81% 98%, #c29465 0px, transparent 50%), radial-gradient(at 59% 0%, #c2c265 0px, transparent 50%), radial-gradient(at 52% 27%, #65c2c2 0px, transparent 50%), radial-gradient(at 76% 39%, #6565c2 0px, transparent 50%) #000000;
+mix-blend-mode: var(--_mesh-gradient-blend-mode);
+filter: blur(var(--_mesh-gradient-blur));
+}
