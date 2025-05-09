@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row hero-heading" style="height: 85vh;">
+
+        <div class="card mx-auto" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{request.user.username}}</h5>
+              <p class="card-text">{{request.user.first_name}} {{request.user.last_name}}</p>
+              <p class="card-text">        {{request.user.phone_number}} 
+            </p>
+              <p class="card-text">{{request.user.city}} {{request.user.state}} {{request.user.country}}</p>
+              <p class="card-text">{% if not request.user.is_mentor %}mentor{%else%} Mentee{%endif%}</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        <h2>Notifications</h2>
+        <div>
+        </div>
+    </div>
+</div>
+{% endblock %}

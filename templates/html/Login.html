@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
+<div style="height: 60vh;display: flex;" >
+<div class="container my-auto mx-auto">
     <form method="post" class="container-fluid mx-auto">
         {% csrf_token %}
         <div class="row">
@@ -17,8 +18,9 @@
             <button type="submit" class="btn btn-primary col-1 mx-auto p-2">Login</button>
         </div>
     </form>
-    <div class="row">
+    <div class="row justify-content-md-end">
         <a type="submit" class="btn btn-primary col-1" href="register/">Register</a>
     </div>
+</div>
 </div>
 {% endblock %}

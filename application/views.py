@@ -9,7 +9,11 @@ def home(req):
     return render(req, 'html/homepage.html')
 
 def main(req):
-    return render(req, 'html/MainPage.html')
+    mentors = user.objects.filter(is_mentor=True)
+    for mentor in mentors:
+        print(mentor.is_mentor)
+    print('mentors ',mentors)
+    return render(req, 'html/MainPage.html',{'mentors':mentors})
 
 def register(req):
     if req.method=='POST':
@@ -25,10 +29,14 @@ def register(req):
             state=req.POST['state'],
             country=req.POST['country'],
             zip_code=req.POST['zip_code'],
+            is_mentor=req.POST['is_mentor'],
         )
         print('user1',user1)
+        user1=user.objects.get(username=req.POST['username'])
+        logout(req)
         if user1:
             messages.success(req, 'User created successfully')
+            login(user=user1,request=req)
             return redirect('main')
         else:
             return render(req, 'Register.html', {'error': 'User already exists'})
@@ -51,3 +59,10 @@ def Login(req):
 def Logout(req):
     logout(req)
     return redirect('home')
+
+def mentorPage(req, username):
+    print('id', id)
+    mentor = user.objects.get(username=username)
+    sessions_vals = sessions.objects.filter(mentor_id=mentor)
+    print('mentor', mentor)
+    return render(req, 'html/MentorPage.html', {'mentor': mentor,'sessions': sessions_vals})

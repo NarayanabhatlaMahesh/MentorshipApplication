@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card col-2 mx-auto">
+    <div class="pt-2 mx-auto">
+        <img class="pt-2" src="..." class="card-img-top" alt="...">
+    </div>
+    <div class="card-body">
+        <h5 class="card-title" style="text-align: center;" >{{mentor.username}}</h5>
+        <p class="card-text">{{mentor.first_name}} {{mentor.last_name}}</p>
+        <p class="card-text"> {{mentor.phone_number}}
+        </p>
+        <p class="card-text">{{mentor.city}} {{mentor.state}} {{mentor.country}}</p>
+        <p class="card-text">{% if not mentor.is_mentor %}mentor{%else%} Mentee{%endif%}</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+<div class="mt-2 pt-2">
+    <div class="col-6 mx-auto" >
+        <div>
+            <h1 style="text-align: center; color: aliceblue;" >Sessions Available</h1>
+            {% for session in sessions %}
+            <div>
+                {{session.session_date}} {{session.session_time}} {{session.session_duration}}<br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
