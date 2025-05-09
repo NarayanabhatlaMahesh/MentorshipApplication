@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <form method="post" class="container-fluid mx-auto">
+        {% csrf_token %}
+        <div class="row">
+            <div class="mx-auto col-6">
+                <input type="text" class="mx-auto form-control" name="username" placeholder="Username" required><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mx-auto col-6">
+            <input type="password" class="mx-auto form-control" name="password" placeholder="Password" required><br>
+            </div>
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-primary col-1 mx-auto p-2">Login</button>
+        </div>
+    </form>
+    <div class="row">
+        <a type="submit" class="btn btn-primary col-1" href="register/">Register</a>
+    </div>
+</div>
+{% endblock %}

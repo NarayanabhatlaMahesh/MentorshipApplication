@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container col-6" >
+    <form method="post">
+        {% csrf_token %}
+        <label style="color: white;" for="username">Username:</label>
+        <input class="form-control" type="text" id="username" name="username" maxlength="100" required><br>
+      
+        <label style="color: white;" for="email">Email:</label>
+        <input class="form-control" type="email" id="email" name="email" maxlength="100" required><br>
+      
+        <label style="color: white;" for="password">Password:</label>
+        <input class="form-control" type="password" id="password" name="password" maxlength="100" required><br>
+      
+        <label style="color: white;" for="first_name">First Name:</label>
+        <input class="form-control" type="text" id="first_name" name="first_name" maxlength="100"><br>
+      
+        <label style="color: white;" for="last_name">Last Name:</label>
+        <input class="form-control" type="text" id="last_name" name="last_name" maxlength="100"><br>
+
+        <label style="color: white;" for="phone_number">Phone Number:</label>
+        <input class="form-control" type="text" id="phone_number" name="phone_number" maxlength="15" required><br>
+
+        <label style="color: white;" for="city">City:</label>
+        <input class="form-control" type="text" id="city" name="city" maxlength="100"><br>
+      
+        <label style="color: white;" for="state">State:</label>
+        <input class="form-control" type="text" id="state" name="state" maxlength="100"><br>
+      
+        <label style="color: white;" for="country">Country:</label>
+        <input class="form-control" type="text" id="country" name="country" maxlength="100"><br>
+      
+        <label style="color: white;" for="zip_code">Zip Code:</label>
+        <input class="form-control" type="text" id="zip_code" name="zip_code" maxlength="10"><br>
+
+        <label style="color: white;" for="zip_code">No</label><input type="radio" name="is_mentor" value="0">
+        <label style="color: white;" for="zip_code">Yes</label><input type="radio" name="is_mentor" value="1">
+        <label style="color: white;" for="is_mentor">Are you a mentor?</label><br>
+    <button type="submit" class="btn btn-primary" > login </button>
+</form>
+</div>
+
+{% endblock %}
