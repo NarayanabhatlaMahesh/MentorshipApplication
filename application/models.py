@@ -24,13 +24,12 @@ class user(AbstractUser):
 
 class sessions(models.Model):
     session_id = models.AutoField(primary_key=True)
-    mentor_id = models.ForeignKey(user, on_delete=models.CASCADE, related_name='mentor')
+    mentor = models.ManyToManyField(user, related_name='mentor_session')
     session_date = models.DateTimeField(auto_now_add=True)
     session_time = models.TimeField()
-    mentee_id = models.ForeignKey(user, on_delete=models.CASCADE, related_name='mentee')
+    mentee = models.ManyToManyField(user, related_name='mentee_session')
     is_completed = models.BooleanField(default=False)
-    def __str__(self):
-        return f"Session {self.session_id} - Mentor: {self.mentor_id.username} - Mentee: {self.mentee_id.username}"
+    
 
 class skills(models.Model):
     skill = models.CharField(max_length=100)
@@ -42,7 +41,5 @@ class skills(models.Model):
 class user_skills(models.Model):
     user_id = models.ForeignKey(user, on_delete=models.CASCADE)
     skill_id = models.ForeignKey(skills, on_delete=models.CASCADE)
-    proficiency_level = models.CharField(max_length=100)
-    years_of_experience = models.IntegerField()
     def __str__(self):
-        return f"{self.user_id.username} - {self.skill_id.skill} - {self.proficiency_level}"
+        return f"{self.user_id.username} - {self.skill_id.skill}"

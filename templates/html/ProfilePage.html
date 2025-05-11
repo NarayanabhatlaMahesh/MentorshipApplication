@@ -1,23 +1,97 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container-fluid" style="height: 100vh;">
-    <div class="row hero-heading" style="height: 85vh;">
-
-        <div class="card mx-auto" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
+  <div class="row hero-heading" style="height: 85vh;">
+    <h2 style="text-align: center;">
+      {% if request.user.is_mentor %}Mentor{%else%}Mentee{%endif%} Profile</h2>
+    <div class="card mx-auto my-2" style="width: 28rem;">
+      <img src="..." class="card-img-top p-3" alt="...">
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+            <div class="col">
               <h5 class="card-title">{{request.user.username}}</h5>
+            </div>
+            <div class="col">
               <p class="card-text">{{request.user.first_name}} {{request.user.last_name}}</p>
-              <p class="card-text">        {{request.user.phone_number}} 
-            </p>
-              <p class="card-text">{{request.user.city}} {{request.user.state}} {{request.user.country}}</p>
-              <p class="card-text">{% if not request.user.is_mentor %}mentor{%else%} Mentee{%endif%}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
           </div>
-        <h2>Notifications</h2>
-        <div>
+          <div class="row">
+            <div class="col">
+              <p class="card-text"> {{request.user.phone_number}}
+              </p>
+            </div>
+            <div class="col">
+              <p class="card-text"> {{request.user.email}}
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+    <div>
+      <!-- Button trigger modal -->
+
+      <div class="card col-3 mx-auto my-2">
+        <div class="p-3">
+          <h5 class="card-title mx-auto" style="text-align: center;">Your Skills</h5>
+          <div>
+            {% for i in user_skills %}
+            <p>{{i}}</p>
+            {% endfor %}
+          </div>
+          <div style="display: block;" class="modal-footer">
+            <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+              data-bs-target="#AddSkillsModal">
+              Add Skills
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <h2>Notifications</h2>
+
+      <!-- Modal -->
+      <div class="modal fade" style="color: black;" id="AddSkillsModal" tabindex="-1"
+        aria-labelledby="AddSkillsModalLabel" aria-hidden="true">
+        <form method="post">
+          {%csrf_token%}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="AddSkillsModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <label for="skills">Skills</label>
+                <select name="skills" style="width: 20rem;" Multiple class="selectpicker"
+                  aria-label="Default select example">
+                  {% for skill in skills %}
+                  <option style="color: black;" value="{{skill.skill_id}}">{{skill.skill}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update Skills</button>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+
+    $('.selectpicker').select2({
+      dropdownParent: $('#AddSkillsModal')
+    });
+
+  });
+</script>
 {% endblock %}
