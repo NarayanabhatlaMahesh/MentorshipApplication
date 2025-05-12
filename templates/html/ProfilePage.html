@@ -32,23 +32,64 @@
     <div>
       <!-- Button trigger modal -->
 
-      <div class="card col-3 mx-auto my-2">
-        <div class="p-3">
-          <h5 class="card-title mx-auto" style="text-align: center;">Your Skills</h5>
-          <div>
-            {% for i in user_skills %}
-            <p>{{i}}</p>
-            {% endfor %}
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="card col-6 mx-auto my-2">
+              <div class="p-3">
+                <h5 class="card-title mx-auto" style="text-align: center;">Your Skills</h5>
+                <div>
+                  {% for i in user_skills %}
+                  <p>{{i}}</p>
+                  {% endfor %}
+                </div>
+                <div style="display: block;" class="modal-footer">
+                  <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+                    data-bs-target="#AddSkillsModal">
+                    Add Skills
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style="display: block;" class="modal-footer">
-            <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
-              data-bs-target="#AddSkillsModal">
-              Add Skills
-            </button>
+          <div class="col">
+            <div class="card col-8 mx-auto my-2 ">
+              <div class="p-3">
+                <h5 class="card-title mx-auto" style="text-align: center;">Your Sessions</h5>
+                <div>
+                  <table class="table table-striped">
+                    <tr>
+                        <td>date</td>
+                        <td>time</td>
+                        <td>username</td>
+                    </tr>
+                    {% for i in sessions_list %}
+                    <tr>
+                      <td>
+                        {{i.session_date}}</td>
+                      <td>
+                        {{i.session_time}}</td>
+                      <td>
+                        {%for mentee in i.mentee.all.values%}
+                        {{ mentee.username }}
+                      </td>
+                      {% endfor %}
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+                <div style="display: block;" class="modal-footer">
+                  <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+                    data-bs-target="#AddSkillsModal">
+                    Add Skills
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
+
       <h2>Notifications</h2>
 
       <!-- Modal -->

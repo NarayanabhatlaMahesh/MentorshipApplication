@@ -107,7 +107,12 @@ def skillsPage(req):
 def profilePage(req):
     skills_List = skills.objects.all()
     user_skills_list = [skills.objects.get(skill_id=i['skill_id_id']) for i in user_skills.objects.filter(user_id=req.user).values()]
+    sessions_list=[]
+    if req.user.is_mentor:
+        sessions_list = sessions.objects.filter(mentor=req.user)
+    else:
+        sessions_list = sessions.objects.filter(mentee=req.user)
     if req.method=='POST':
         for i in req.POST.getlist('skills'):
             user_skills.objects.create(user_id = req.user,skill_id=skills.objects.get(skill_id=int(i))).save()
-    return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list})
+    return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list,'sessions_list':sessions_list})
