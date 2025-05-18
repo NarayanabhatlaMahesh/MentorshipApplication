@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
-from application.models import user, sessions, skills, user_skills
+from application.models import user, sessions, skills, user_skills, slots, notifications
 from django.contrib import messages
 from datetime import datetime
 
@@ -42,10 +42,14 @@ def register(req):
 
 def Login(req):
     if req.method=='POST':
-        user1 = user.objects.get(
+        try:
+            user1 = user.objects.get(
             username=req.POST['username'],
             password=req.POST['password'],
-        )
+            )
+        except user.DoesNotExist:
+            messages.error(req, 'Invalid username or password')
+            return redirect('login')
         if(user1):
             login(user=user1, request=req)
             return redirect('main')
@@ -61,25 +65,21 @@ def mentorPage(req, username):
     if req.method=='GET':
         try:
             mentor = user.objects.get(username=username)
-            print('mentor asked is ',mentor)
-            print([i.skill_id.skill for i in user_skills.objects.filter(user_id=mentor)])
             mentors_skills=list(set([skills.objects.get(skill_id=i.skill_id.skill_id) for i in user_skills.objects.filter(user_id=mentor)]))
-            print('mentors skills are ',mentors_skills)
         except user.DoesNotExist:
             messages.error(req, 'Mentor not found')
             return redirect('main')
-        return render(req, 'html/MentorPage.html', {'mentor': mentor,'mentor_skills': mentors_skills})  
+        mentor_slots=list(set([mentor_slot for mentor_slot in slots.objects.all()]))
+        return render(req, 'html/MentorPage.html', {'mentor': mentor,'mentor_skills': mentors_skills,"mentor_slots":mentor_slots})  
     if req.method=='POST':
-        print('uesrname in mentorpage is ',username)
         mentor = user.objects.filter(username=username)[0]
-        print('mentor values ',vars(mentor))
         sess = sessions.objects.create(session_time=datetime.now(),session_date=req.POST['session_date'])
         sess.save()
-        print(sess.mentor)
         sess.mentor.add(mentor)
+        notificatoin = notifications(user=mentor, message=f"New session created with {req.user.username}")
+        notificatoin.save()
         sess.mentee.add(req.user)
         sess.save()
-        print([m.username for m in sess.mentor.all()])
         messages.success(req, 'Session created successfully')
         return redirect('main')
     
@@ -108,11 +108,32 @@ def profilePage(req):
     skills_List = skills.objects.all()
     user_skills_list = [skills.objects.get(skill_id=i['skill_id_id']) for i in user_skills.objects.filter(user_id=req.user).values()]
     sessions_list=[]
+    mentor_slots=list(set([mentor_slot for mentor_slot in slots.objects.all()]))
+    notifications_list = notifications.objects.filter(user=req.user)
+    selectList=[]
+    for i in range(len(skills_List)):
+        for j in user_skills_list:
+            if skills_List[i].skill_id == j.skill_id:
+                selectList.append(i)
+    selectList = list(set(selectList))
     if req.user.is_mentor:
         sessions_list = sessions.objects.filter(mentor=req.user)
     else:
         sessions_list = sessions.objects.filter(mentee=req.user)
     if req.method=='POST':
-        for i in req.POST.getlist('skills'):
-            user_skills.objects.create(user_id = req.user,skill_id=skills.objects.get(skill_id=int(i))).save()
-    return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list,'sessions_list':sessions_list})
+        skill_ids = req.POST.getlist('skills')
+        skill_objects = skills.objects.filter(skill_id__in=skill_ids)
+        user_skills.objects.filter(user_id = req.user).update(is_active=False)
+        user_skill_instances = [
+            user_skills(user_id=req.user, skill_id=skill)
+            for skill in skill_objects
+        ]
+        user_skills.objects.bulk_create(user_skill_instances)
+        messages.success(req,'skills added successfully')
+        return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list,
+                                                'sessions_list':sessions_list,"mentor_slots":mentor_slots,
+                                                "notification_list":notifications_list,'selectList':selectList})
+
+    return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list,
+                                                'sessions_list':sessions_list,"mentor_slots":mentor_slots,
+                                                "notification_list":notifications_list,'selectList':selectList})

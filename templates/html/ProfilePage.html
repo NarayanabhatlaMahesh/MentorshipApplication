@@ -38,9 +38,9 @@
             <div class="card col-6 mx-auto my-2">
               <div class="p-3">
                 <h5 class="card-title mx-auto" style="text-align: center;">Your Skills</h5>
-                <div>
+                <div class="row row-cols-5 my-4">
                   {% for i in user_skills %}
-                  <p>{{i}}</p>
+                  <div class="card grid mx-4 my-2">{{i}}</div>
                   {% endfor %}
                 </div>
                 <div style="display: block;" class="modal-footer">
@@ -52,17 +52,62 @@
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card col-8 mx-auto my-2 ">
-              <div class="p-3">
-                <h5 class="card-title mx-auto" style="text-align: center;">Your Sessions</h5>
+          <div class="col-3">
+            <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+              data-bs-target="#SessionsModal">
+              Sessions
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h2>Notifications</h2>
+      <div class="container">
+        {% for i in notification_list %}
+        <button class="btn">
+          {{i.message}}
+        </button>
+        {% endfor %}
+      </div>
+      <!-- Sessions Modal -->
+
+      <div class="modal fade" style="color: black;" id="SessionsModal" tabindex="-1"
+        aria-labelledby="SessionsModalLabel" aria-hidden="true">
+        <form method="post">
+          {%csrf_token%}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="SessionsModalLabel">Sessions</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
                 <div>
-                  <table class="table table-striped">
-                    <tr>
-                        <td>date</td>
-                        <td>time</td>
-                        <td>username</td>
-                    </tr>
+                  <ul class="nav nav-pills">
+                    <li class="nav-item">
+                      <a class="nav-link btn btn-primary" aria-current="page" style="color: black;" id="sessionsID"
+                        onclick="
+                        document.getElementById('Sessions').style.display='table';
+                        document.getElementById('Sessions').style.textAlign='center';
+                        document.getElementById('slots').style.display='none';">Sessions</a>
+                    </li>
+                    {% if request.user.is_mentor %}
+                    <li class="nav-item">
+                      <a class="nav-link btn btn-outline-primary" id="slotsID" onclick="
+                      document.getElementById('slots').style.display='block';
+                      document.getElementById('Sessions').style.display='none';">Slots</a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                  <table style="text-align: center;" id="Sessions" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Username</th>
+                      </tr>
+                    </thead>
                     {% for i in sessions_list %}
                     <tr>
                       <td>
@@ -76,23 +121,40 @@
                       {% endfor %}
                     </tr>
                     {% endfor %}
+                    {% if sessions_list|length == 0 %}
+                    <tr>
+                      <td colspan="3">
+                        No sessions available
+                      </td>
+                    </tr>
+                    {% endif %}
                   </table>
                 </div>
-                <div style="display: block;" class="modal-footer">
-                  <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
-                    data-bs-target="#AddSkillsModal">
-                    Add Skills
+              </div>
+              {% if request.user.is_mentor %}
+              <div class="modal-footer m-2" style="display: none;" id="slots">
+                <div class="container">
+                  {% for i in mentor_slots %}
+                  <button class="btn btn-warning">
+                    {{i}}
                   </button>
+                  {% endfor %}
                 </div>
+
+
+                <button type="button" class="btn btn-success">Add Slots</button>
+              </div>
+              {% endif %}
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">View slots</button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
 
-      <h2>Notifications</h2>
-
-      <!-- Modal -->
+      <!-- Add Skills Modal -->
       <div class="modal fade" style="color: black;" id="AddSkillsModal" tabindex="-1"
         aria-labelledby="AddSkillsModalLabel" aria-hidden="true">
         <form method="post">
@@ -100,7 +162,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="AddSkillsModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="AddSkillsModalLabel">Add Skills</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -109,7 +171,9 @@
                 <select name="skills" style="width: 20rem;" Multiple class="selectpicker"
                   aria-label="Default select example">
                   {% for skill in skills %}
-                  <option style="color: black;" value="{{skill.skill_id}}">{{skill.skill}}</option>
+                  <option style="color: black;" 
+                            
+                            value="{{skill.skill_id}}">{{skill.skill}}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -132,6 +196,8 @@
     $('.selectpicker').select2({
       dropdownParent: $('#AddSkillsModal')
     });
+    $('.selectpicker').val({{selectList}}).trigger('change');
+   
 
   });
 </script>

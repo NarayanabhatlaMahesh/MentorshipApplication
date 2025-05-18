@@ -41,5 +41,39 @@ class skills(models.Model):
 class user_skills(models.Model):
     user_id = models.ForeignKey(user, on_delete=models.CASCADE)
     skill_id = models.ForeignKey(skills, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
     def __str__(self):
         return f"{self.user_id.username} - {self.skill_id.skill}"
+
+class mentorSlots(models.Model):
+    mentor = models.ForeignKey(user, on_delete=models.CASCADE)
+    from_time = models.TimeField()
+    to_time = models.TimeField()
+    is_booked = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.mentor.username} - {self.from_time} - {self.to_time}"
+    
+# class sessions(models.Model):
+#     session_id = models.AutoField(primary_key=True)
+#     mentor = models.ManyToManyField(user, related_name='mentor_session')
+#     mentor_slot = models.ForeignKey(mentorSlots, on_delete=models.CASCADE)
+#     mentee = models.ManyToManyField(user, related_name='mentee_session')
+#     is_completed = models.BooleanField(default=False)
+
+class slots(models.Model):
+    slot_id = models.AutoField(primary_key=True)
+    from_time = models.TextField()
+    to_time = models.TextField()
+    
+    def __str__(self):
+        return f"{self.from_time} - {self.to_time}"
+
+class notifications(models.Model):
+    user = models.ForeignKey(user, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.message}"
