@@ -61,13 +61,28 @@
         </div>
       </div>
 
-      <h2>Notifications</h2>
-      <div class="container">
+      <h2 style="text-align: center;">Notifications</h2>
+      <div class="container"  >
+        <table>
+          <thead>
+            <tr>
+              <th>slno</th>
+              <th>Notification</th>
+            </tr>
+          </thead>
+          <tbody>
+           
         {% for i in notification_list %}
-        <button class="btn">
+        <tr>0</tr>
+        <tr>
+              
+            
           {{i.message}}
-        </button>
+      </tr>
         {% endfor %}
+         
+          </tbody>
+        </table>
       </div>
       <!-- Sessions Modal -->
 
@@ -142,12 +157,10 @@
                 </div>
 
 
-                <button type="button" class="btn btn-success">Add Slots</button>
               </div>
               {% endif %}
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">View slots</button>
               </div>
             </div>
           </div>
@@ -157,7 +170,7 @@
       <!-- Add Skills Modal -->
       <div class="modal fade" style="color: black;" id="AddSkillsModal" tabindex="-1"
         aria-labelledby="AddSkillsModalLabel" aria-hidden="true">
-        <form method="post">
+        <form method="post" onsubmit="window.location.reload();">
           {%csrf_token%}
           <div class="modal-dialog">
             <div class="modal-content">
@@ -191,6 +204,9 @@
 </div>
 
 <script>
+  {% for i in skills %}
+  console.log("{{i}}");
+  {% endfor %}
   $(document).ready(function () {
 
     $('.selectpicker').select2({

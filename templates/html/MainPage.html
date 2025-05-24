@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container-fluid" style="height: 100vh;">
-    <h1>Mentors</h1>
+<div class="container" style="height: 100vh;">
+  <h1 style="color: aliceblue; text-align: center;">Mentors</h1>
+  <div class="row row-cols-3">
     {% for mentor in mentors %}
-    <div class="card" onclick="window.location='/mentor/{{mentor.username}}'" >
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{mentor.username}}</h5>
-              <p class="card-text">{{mentor.first_name}} {{mentor.last_name}}</p>
-              <p class="card-text">        {{mentor.phone_number}} 
-            </p>
-              <p class="card-text">{{mentor.city}} {{mentor.state}} {{mentor.country}}</p>
-              <p class="card-text">{% if not mentor.is_mentor %}mentor{%else%} Mentee{%endif%}</p>
-            </div>
+    <div class="card mx-auto" onclick="window.location='/mentor/{{mentor.username}}'">
+      <img src="..." class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">{{mentor.username}}</h5>
+        <p class="card-text">{{mentor.first_name}} {{mentor.last_name}}</p>
+        <p class="card-text"> {{mentor.phone_number}}
+        </p>
+        <p class="card-text">{{mentor.city}} {{mentor.state}} {{mentor.country}}</p>
+        <p class="card-text">{% if mentor.is_mentor %}mentor{%else%} Mentee{%endif%}</p>
+      </div>
     </div>
     {% endfor %}
+  </div>
 </div>
 {% endblock %}

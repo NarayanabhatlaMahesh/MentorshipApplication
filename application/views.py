@@ -38,7 +38,7 @@ def register(req):
             return redirect('main')
         else:
             return render(req, 'Register.html', {'error': 'User already exists'})
-    return render(req, 'Register.html')
+    return render(req, 'Register.html',{'mentor':req.GET.get('type')})
 
 def Login(req):
     if req.method=='POST':
@@ -106,16 +106,17 @@ def skillsPage(req):
 
 def profilePage(req):
     skills_List = skills.objects.all()
-    user_skills_list = [skills.objects.get(skill_id=i['skill_id_id']) for i in user_skills.objects.filter(user_id=req.user).values()]
+    user_skills_list = [skills.objects.get(skill_id=i['skill_id_id']) for i in user_skills.objects.filter(user_id=req.user, is_active=True).values()]
     sessions_list=[]
     mentor_slots=list(set([mentor_slot for mentor_slot in slots.objects.all()]))
     notifications_list = notifications.objects.filter(user=req.user)
     selectList=[]
-    for i in range(len(skills_List)):
-        for j in user_skills_list:
-            if skills_List[i].skill_id == j.skill_id:
-                selectList.append(i)
-    selectList = list(set(selectList))
+    user_skill_ids = {j.skill_id for j in user_skills_list}
+
+    for index, skill in enumerate(skills_List):
+        if skill.skill_id in user_skill_ids:
+            selectList.append(index + 1)
+
     if req.user.is_mentor:
         sessions_list = sessions.objects.filter(mentor=req.user)
     else:
@@ -125,11 +126,18 @@ def profilePage(req):
         skill_objects = skills.objects.filter(skill_id__in=skill_ids)
         user_skills.objects.filter(user_id = req.user).update(is_active=False)
         user_skill_instances = [
-            user_skills(user_id=req.user, skill_id=skill)
+            user_skills(user_id=req.user, skill_id=skill, is_active=True)
             for skill in skill_objects
         ]
         user_skills.objects.bulk_create(user_skill_instances)
-        messages.success(req,'skills added successfully')
+        messages.success(req,'Skills Added Successfully')
+        user_skills_list = [skills.objects.get(skill_id=i['skill_id_id']) for i in user_skills.objects.filter(user_id=req.user, is_active=True).values()]
+        selectList=[]
+        user_skill_ids = {j.skill_id for j in user_skills_list}
+        for index, skill in enumerate(skills_List):
+            if skill.skill_id in user_skill_ids:
+                selectList.append(index + 1)
+
         return render(req, 'html/ProfilePage.html',{'skills':skills_List,'user_skills':user_skills_list,
                                                 'sessions_list':sessions_list,"mentor_slots":mentor_slots,
                                                 "notification_list":notifications_list,'selectList':selectList})

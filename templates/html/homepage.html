@@ -1,33 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <div>
-    <div class="container-fluid" style="height: 100vh;">
+    <div class="container" style="height: 100vh;">
         <div class="row hero-heading" style="height: 85vh;">
-            <div class="col" style="margin: auto;" >
-                <h1 style="font-size: 190px;margin: auto !important;text-align: center;">collaborate
+            <div class="col-6" style="margin: auto;" >
+                <h1 style="font-size: 130px;margin: auto !important;text-align: center;">collaborate
                     with industry</h1>
+                    <h4 style="margin: auto !important;text-align: center;">we provide opportunities for
+                    learners and providers</h4>
             </div>
-            <div class="col" style="margin: auto;">
-                <h3 style="margin: auto !important;text-align: center;">we provide opportunities for
-                    learners and providers</h3>
+            <div class="col-6" style="margin: auto;">
+                <img  alt="Img" class="rounded" src="{% static 'mentorship.avif' %}" />
             </div>
         </div>
         <div>
             <div class="container">
                 <div class="row">
                     <div class="col-6"  style="display: flex !important;"  >
-                        <a style="margin: auto;"  class="btn btn-primary mx-auto" href="register/">mentor register</a>
+                        <a style="margin: auto;"  class="btn btn-primary mx-auto" href="register/?type=Mentor">Mentor Register</a>
                         
                     </div>
                     <div class="col-6"  style="display: flex !important;">
-                        <a style="margin: auto;" class="btn btn-primary mx-auto" href="register/" >mentee register</a>
+                        <a style="margin: auto;" class="btn btn-primary mx-auto" href="register/?type=Mentee" >Mentee Register</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="container" style="height: 100px; background-color   : rgb(153, 185, 175);">
-        kajhdasjhd
+        Footer
     </div>
 </div>
 {% endblock %}
